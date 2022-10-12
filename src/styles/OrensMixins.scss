@@ -19,6 +19,11 @@
     }
 }
 
+@mixin listFont {
+    font-size: $listFontSize;
+    font-weight: $listFontWeight;
+}
+
 @mixin defaultButton {
     @include labelFont;
     align-self: center;
@@ -34,6 +39,10 @@
 
     &:hover {
         background-color: $buttBackground_onHover;
+    }
+
+    &:disabled {
+        background-color: $buttBackground_disabled;
     }
 
     // @media all and (max-width: $containerWidth) {

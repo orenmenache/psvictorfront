@@ -4,6 +4,7 @@
     For more hue check this out https://www.google.com/search?q=hue+circle+css&ei=Ql0vY9XONITNgQbWkr6wCA&ved=0ahUKEwjV97XGl676AhWEZsAKHVaJD4YQ4dUDCA4&uact=5&oq=hue+circle+css&gs_lcp=Cgdnd3Mtd2l6EAMyBggAEB4QFjIFCAAQhgMyBQgAEIYDMgUIABCGAzIFCAAQhgM6CggAEEcQ1gQQsAM6BQgAEIAESgQIQRgASgQIRhgAUMwCWJIJYOYJaAFwAXgAgAGVAYgBoAOSAQMwLjOYAQCgAQHIAQjAAQE&sclient=gws-wiz#imgrc=Egfk3xcRG8j7AM
 */
 $hue_main: 330;
+$counter_hue: 220;
 
 /*
     Soft saturation will be half of strong saturation
@@ -26,5 +27,7 @@ $fontColor_dark: black;
 
 $buttBackground: hsl($hue_main, $sat_strong, $light_low);
 $buttBackground_onHover: hsl($hue_main, $sat_strong, $light_low * 1.4);
+$buttBackground_disabled: hsl($hue_main, $sat_soft, $light_low * 2);
 $formBackground: hsl($hue_main, $sat_soft, $light_med);
 $pageBackground: hsl($hue_main, $sat_soft, $light_high);
+$listBackground: hsl($counter_hue, $sat_soft, $light_low * 1.5);

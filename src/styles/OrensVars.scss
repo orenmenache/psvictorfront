@@ -4,6 +4,10 @@ $inputFontSize: $labelFontSize * 0.8;
 $labelFontWeight: 500;
 $inputFontWeight: $labelFontWeight * 0.8;
 
+$listFontSize: $inputFontSize * 1.2;
+$listFontWeight: $inputFontSize;
+// For now list font size is not response
+
 // button width will be half of container width but with min and max
 $containerWidth: 500px;
 $buttonWidth: $containerWidth * 0.5;

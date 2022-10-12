@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ErrorTerminal from '../components/shared/ErrorTerminal';
 import { SetNewsItems } from '../components/forms/setNewsItems';
-import { NewsItemFormError } from '../types';
+import { EditionItem, NewsItemFormError } from '../types';
 
 function SendNewsItemToPS() {
     const BASE_ROUTE = `http://localhost:5015/api/psVictor/`;
@@ -20,10 +20,12 @@ function SendNewsItemToPS() {
     const [editionsInitData, setEditionsInitData] = useState(
         [] as { editionName: string; schemeName: string }[]
     );
-    //const [editionName, setEditionName] = useState('');
+    const [newsItems, setNewsItems] = useState([] as EditionItem[]);
+    const [selectedEditionName, setSelectedEditionName] = useState('IMMFX EN');
 
     const [isLoading, setIsLoading] = useState(true);
-    const [isProcessing, setIsProcessing] = useState(false);
+    const [isGettingNewsItems, setIsGettingNewsItems] = useState(false);
+    const [isSendingToPS, setIsSendingToPS] = useState(false);
 
     // Get all langScheme names
     useEffect(() => {
@@ -64,68 +66,47 @@ function SendNewsItemToPS() {
         getEditionNames();
     }, [ROUTES.editionMeta]);
 
-    // Load newsItems
-    // useEffect(() => {
-    //     //console.log(`Loading newsItems`);
-    //     const getNewsItems = async () => {
-    //         const response: Response = await fetch(
-    //             `${ROUTES.editionMeta}/${editionName}`
-    //         );
-    //         const json = (await response.json()) as
-    //             | { errorMessage: string }
-    //             | {
-    //                   editionsInitData: {
-    //                       editionName: string;
-    //                       schemeName: string;
-    //                   }[];
-    //               };
-
-    //         if ('errorMessage' in json) {
-    //             console.log(json.errorMessage);
-    //             throw json.errorMessage;
-    //         }
-    //         setEditionsInitData(json.editionsInitData);
-    //     };
-    //     getNewsItems();
-    // }, [newsItem]);
-
-    // send data
-    // useEffect(() => {
-    //     if (isProcessing) {
-    //         const sendData = async () => {
-    //             const response: Response = await fetch(
-    //                 `${ROUTES.sendToPS}/news`,
-    //                 {
-    //                     method: 'POST', // *GET, POST, PUT, DELETE, etc.
-    //                     //mode: 'cors', // no-cors, *cors, same-origin
-    //                     //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-    //                     //credentials: 'same-origin', // include, *same-origin, omit
-    //                     headers: {
-    //                         'Content-Type': 'application/json',
-    //                         // 'Content-Type': 'application/x-www-form-urlencoded',
-    //                     },
-    //                     //redirect: 'follow', // manual, *follow, error
-    //                     //referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-    //                     body: JSON.stringify(newsItem), // body data type must match "Content-Type" header
-    //                 }
-    //             );
-    //             //console.log(response);
-    //             const json = await response.json();
-    //             setIsProcessing(false);
-    //         };
-    //         sendData();
-    //     } else {
-    //         console.log(`IsProcessing is false`);
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [isProcessing]);
-
-    const onClickHandler = async (e: React.MouseEvent) => {
+    const onLoadNewsItemsClick = async (e: React.MouseEvent) => {
         e.preventDefault();
-        setIsProcessing(true);
-        console.log(`Setting processing to true`);
-        //console.log(formData);
+        setIsGettingNewsItems(true);
+        console.log(`setIsGettingNewsItems to true`);
     };
+
+    const onSendToPSClick = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsSendingToPS(true);
+        console.log(`setIsSendingToPS to true`);
+    };
+
+    // Load news items
+    useEffect(() => {
+        if (isGettingNewsItems) {
+            console.log(`Loading news items`);
+            const getNewsItems = async () => {
+                const response: Response = await fetch(
+                    `${ROUTES.editionMeta}/${selectedEditionName}`
+                );
+                const json = await response.json();
+
+                if ('errorMessage' in json) {
+                    console.log(json.errorMessage);
+                    throw json.errorMessage;
+                }
+                console.log(json);
+                setNewsItems(json.newsItems);
+                setIsGettingNewsItems(false);
+            };
+            getNewsItems();
+        }
+    }, [isGettingNewsItems]);
+
+    // Send to PS
+    useEffect(() => {
+        if (isSendingToPS) {
+            console.log(`Sending to PS`);
+        }
+        setIsSendingToPS(false);
+    }, [isSendingToPS]);
 
     return (
         <div className="genericContainer">
@@ -136,11 +117,17 @@ function SendNewsItemToPS() {
                     <SetNewsItems
                         langSchemeNames={langSchemeNames}
                         editionsInitData={editionsInitData}
-                        onClickHandler={onClickHandler}
+                        onLoadNewsItemsClick={onLoadNewsItemsClick}
+                        onSendToPSClick={onSendToPSClick}
                         errors={errors}
                         setErrors={setErrors}
-                        isProcessing={isProcessing}
-                        setIsProcessing={setIsProcessing}
+                        selectedEditionName={selectedEditionName}
+                        setSelectedEditionName={setSelectedEditionName}
+                        isGettingNewsItems={isGettingNewsItems}
+                        setIsGettingNewsItems={setIsGettingNewsItems}
+                        newsItems={newsItems}
+                        isSendingToPS={isSendingToPS}
+                        setIsSendingToPS={setIsSendingToPS}
                     ></SetNewsItems>
                     <ErrorTerminal errors={errors} />
                 </>

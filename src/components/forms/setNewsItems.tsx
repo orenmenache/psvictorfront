@@ -1,26 +1,39 @@
 import React, { useEffect, useState } from 'react';
 import { EditionInitData, EditionItem, NewsItemFormError } from '../../types';
+import NewsItemsList from '../NewsItemsList';
 import Select from '../shared/Select';
 import styles from './setNewsItems.module.scss';
 
 type NewsItemsProps = {
     langSchemeNames: string[];
     editionsInitData: EditionInitData[];
-    onClickHandler: React.MouseEventHandler;
+    onLoadNewsItemsClick: React.MouseEventHandler;
+    onSendToPSClick: React.MouseEventHandler;
     errors: NewsItemFormError;
     setErrors: React.Dispatch<React.SetStateAction<NewsItemFormError>>;
-    isProcessing: boolean;
-    setIsProcessing: React.Dispatch<React.SetStateAction<boolean>>;
+    selectedEditionName: string;
+    setSelectedEditionName: React.Dispatch<React.SetStateAction<string>>;
+    isGettingNewsItems: boolean;
+    setIsGettingNewsItems: React.Dispatch<React.SetStateAction<boolean>>;
+    newsItems: EditionItem[];
+    isSendingToPS: boolean;
+    setIsSendingToPS: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function SetNewsItems({
     langSchemeNames,
     editionsInitData,
-    onClickHandler,
+    onLoadNewsItemsClick,
+    onSendToPSClick,
     errors,
     setErrors,
-    isProcessing,
-    setIsProcessing,
+    selectedEditionName,
+    setSelectedEditionName,
+    isGettingNewsItems,
+    setIsGettingNewsItems,
+    newsItems,
+    isSendingToPS,
+    setIsSendingToPS,
 }: NewsItemsProps) {
     //console.log(`SetNewsItems loading`);
 
@@ -70,6 +83,7 @@ function SetNewsItems({
 
     const onSelectEditionName = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setEditionName(() => e.target.value as string);
+        setSelectedEditionName(e.target.value as string);
     };
 
     const onSelectSchemeName = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -91,7 +105,7 @@ function SetNewsItems({
             );
         };
         filterEditions();
-    }, [schemeName]);
+    }, [editionsInitData, schemeName]);
 
     return (
         <div className={styles.setNewsItemMainContainer}>
@@ -124,17 +138,39 @@ function SetNewsItems({
                         />
                     </div>
                 </div>
+                <div className={styles.responsiveContainer}>
+                    {newsItems.length > 0 ? (
+                        <div>
+                            <NewsItemsList newsItems={newsItems} />
+                            <div className={styles.responsiveRow}>
+                                <button onClick={onLoadNewsItemsClick}>
+                                    Load News Items
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={styles.responsiveRow}>
+                            {isGettingNewsItems ? (
+                                <button disabled>Loading...</button>
+                            ) : (
+                                <button onClick={onLoadNewsItemsClick}>
+                                    Load News Items
+                                </button>
+                            )}
+                        </div>
+                    )}
+                </div>
 
                 <div className={styles.responsiveContainer}>
                     <div className={styles.responsiveRow}>
-                        <button onClick={onClickHandler}>Submit</button>
+                        <button
+                            disabled={isSendingToPS}
+                            onClick={onSendToPSClick}
+                        >
+                            Send To Photo Shop
+                        </button>
                     </div>
-                    {/* <div className={styles.responsiveRow}>
-                        <button onClick={onClickHandler}>Submit</button>
-                    </div> */}
                 </div>
-
-                {/* <input type="submit" value="Submit" /> */}
             </form>
         </div>
     );
