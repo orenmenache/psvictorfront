@@ -1,5 +1,5 @@
 import React from 'react';
-import SendNewsItemToPS from './pages/PsVictorNewsItems';
+import SendNewsItemToPS from './pages/Page__PsVictorNewsItems';
 
 function App() {
     return (

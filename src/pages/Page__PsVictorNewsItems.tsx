@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ErrorTerminal from '../components/shared/ErrorTerminal';
-import { SetNewsItems } from '../components/forms/setNewsItems';
+import { SetNewsItems } from '../components/forms/Form__setNewsItems';
 import { EditionItem, NewsItemFormError } from '../types';
 
 function SendNewsItemToPS() {
@@ -21,6 +21,7 @@ function SendNewsItemToPS() {
         [] as { editionName: string; schemeName: string }[]
     );
     const [newsItems, setNewsItems] = useState([] as EditionItem[]);
+    const [newsItem, setNewsItem] = useState({} as EditionItem);
     const [selectedEditionName, setSelectedEditionName] = useState('IMMFX EN');
 
     const [isLoading, setIsLoading] = useState(true);
@@ -94,6 +95,7 @@ function SendNewsItemToPS() {
                 }
                 console.log(json);
                 setNewsItems(json.newsItems);
+                setNewsItem(json.newsItems[0]);
                 setIsGettingNewsItems(false);
             };
             getNewsItems();
@@ -104,8 +106,30 @@ function SendNewsItemToPS() {
     useEffect(() => {
         if (isSendingToPS) {
             console.log(`Sending to PS`);
+            const sendData = async () => {
+                const response: Response = await fetch(
+                    `${ROUTES.sendToPS}/news`,
+                    {
+                        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                        //mode: 'cors', // no-cors, *cors, same-origin
+                        //cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                        //credentials: 'same-origin', // include, *same-origin, omit
+                        headers: {
+                            'Content-Type': 'application/json',
+                            // 'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        //redirect: 'follow', // manual, *follow, error
+                        //referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+                        body: JSON.stringify(newsItem), // body data type must match "Content-Type" header
+                    }
+                );
+                //console.log(response);
+                const json = await response.json();
+                console.log(json);
+                setIsSendingToPS(false);
+            };
+            sendData();
         }
-        setIsSendingToPS(false);
     }, [isSendingToPS]);
 
     return (
@@ -126,6 +150,8 @@ function SendNewsItemToPS() {
                         isGettingNewsItems={isGettingNewsItems}
                         setIsGettingNewsItems={setIsGettingNewsItems}
                         newsItems={newsItems}
+                        newsItem={newsItem}
+                        setNewsItem={setNewsItem}
                         isSendingToPS={isSendingToPS}
                         setIsSendingToPS={setIsSendingToPS}
                     ></SetNewsItems>

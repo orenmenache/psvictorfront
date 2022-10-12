@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { EditionInitData, EditionItem, NewsItemFormError } from '../../types';
 import NewsItemsList from '../NewsItemsList';
 import Select from '../shared/Select';
-import styles from './setNewsItems.module.scss';
+import styles from './Form__setNewsItems.module.scss';
 
 type NewsItemsProps = {
     langSchemeNames: string[];
@@ -16,6 +16,8 @@ type NewsItemsProps = {
     isGettingNewsItems: boolean;
     setIsGettingNewsItems: React.Dispatch<React.SetStateAction<boolean>>;
     newsItems: EditionItem[];
+    newsItem: EditionItem;
+    setNewsItem: React.Dispatch<React.SetStateAction<EditionItem>>;
     isSendingToPS: boolean;
     setIsSendingToPS: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -32,6 +34,8 @@ function SetNewsItems({
     isGettingNewsItems,
     setIsGettingNewsItems,
     newsItems,
+    newsItem,
+    setNewsItem,
     isSendingToPS,
     setIsSendingToPS,
 }: NewsItemsProps) {
@@ -91,6 +95,13 @@ function SetNewsItems({
         console.log(`OnSelectScheme`);
     };
 
+    const onSelectNewsItem = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        let filtered: EditionItem[] = newsItems.filter((item) => {
+            return item.data.headline === e.target.value;
+        });
+        setNewsItem(filtered[0]);
+    };
+
     // set editionNames by schemeName
     useEffect(() => {
         console.log(`onChangeSchemeName: ${schemeName}`);
@@ -138,37 +149,57 @@ function SetNewsItems({
                         />
                     </div>
                 </div>
-                <div className={styles.responsiveContainer}>
-                    {newsItems.length > 0 ? (
-                        <div>
-                            <NewsItemsList newsItems={newsItems} />
-                            <div className={styles.responsiveRow}>
-                                <button onClick={onLoadNewsItemsClick}>
-                                    Load News Items
-                                </button>
-                            </div>
+                {newsItems.length > 0 ? (
+                    <div className={styles.responsiveContainerFlexCol}>
+                        <div className={styles.fullWidthResponsiveRow}>
+                            <label htmlFor="selectNewsItems">
+                                Select News Item:
+                            </label>
+                            <Select
+                                name="selectNewsItems"
+                                id="selectNewsItems"
+                                value={
+                                    newsItem && 'data' in newsItem
+                                        ? newsItem.data.headline
+                                        : ''
+                                }
+                                onChangeHandler={onSelectNewsItem}
+                                options={newsItems.map((item) => {
+                                    return item.data.headline;
+                                })}
+                            />
                         </div>
-                    ) : (
-                        <div className={styles.responsiveRow}>
-                            {isGettingNewsItems ? (
-                                <button disabled>Loading...</button>
-                            ) : (
-                                <button onClick={onLoadNewsItemsClick}>
-                                    Load News Items
-                                </button>
-                            )}
+                        <div className={styles.fullWidthResponsiveRow}>
+                            <button onClick={onLoadNewsItemsClick}>
+                                Load News Items
+                            </button>
                         </div>
-                    )}
-                </div>
+                    </div>
+                ) : (
+                    <div className={styles.fullWidthResponsiveRow}>
+                        {isGettingNewsItems ? (
+                            <button disabled>Loading...</button>
+                        ) : (
+                            <button onClick={onLoadNewsItemsClick}>
+                                Load News Items
+                            </button>
+                        )}
+                    </div>
+                )}
 
                 <div className={styles.responsiveContainer}>
                     <div className={styles.responsiveRow}>
-                        <button
-                            disabled={isSendingToPS}
-                            onClick={onSendToPSClick}
-                        >
-                            Send To Photo Shop
-                        </button>
+                        {isSendingToPS ? (
+                            <>
+                                <button disabled>Sending...</button>
+                            </>
+                        ) : (
+                            <>
+                                <button onClick={onSendToPSClick}>
+                                    Send To Photoshop
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
             </form>
