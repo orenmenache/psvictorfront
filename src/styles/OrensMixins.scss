@@ -1,0 +1,55 @@
+@import './OrensVars.scss';
+@import './OrensColorPallete.scss';
+
+@mixin labelFont {
+    font-size: $labelFontSize;
+    font-weight: $labelFontWeight;
+
+    @media screen and (max-width: $containerWidth) {
+        font-size: $ssLabelFontSize;
+    }
+}
+
+@mixin inputFont {
+    font-size: $inputFontSize;
+    font-weight: $inputFontWeight;
+
+    @media screen and (max-width: $containerWidth) {
+        font-size: $ssInputFontSize;
+    }
+}
+
+@mixin defaultButton {
+    @include labelFont;
+    align-self: center;
+    background-color: $buttBackground;
+    color: $fontColor_light;
+    padding: $buttonPadding;
+    margin: 0.7rem;
+    border: none;
+    border-radius: 0.4rem;
+    width: 100%;
+    //width: clamp(200px, 50%, $buttonWidth);
+    transition: all 0.1s;
+
+    &:hover {
+        background-color: $buttBackground_onHover;
+    }
+
+    // @media all and (max-width: $containerWidth) {
+    //     width: 100%;
+    // }
+}
+
+// Will cover input and select tags
+@mixin singleFieldInput {
+    @include inputFont;
+    padding: $inputPadding;
+    border: none;
+    border-radius: 0.4rem;
+    transition: all 0.1s;
+
+    &:focus {
+        outline: 3px solid $buttBackground;
+    }
+}
