@@ -1,44 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { NewsContext } from '../../contexts/NewsContext';
 import { EditionInitData, EditionItem, NewsItemFormError } from '../../types';
-import NewsItemsList from '../NewsItemsList';
+//import NewsItemsList from '../NewsItemsList';
 import Select from '../shared/Select';
 import styles from './Form__setNewsItems.module.scss';
 
-type NewsItemsProps = {
-    langSchemeNames: string[];
-    editionsInitData: EditionInitData[];
-    onLoadNewsItemsClick: React.MouseEventHandler;
-    onSendToPSClick: React.MouseEventHandler;
-    errors: NewsItemFormError;
-    setErrors: React.Dispatch<React.SetStateAction<NewsItemFormError>>;
-    selectedEditionName: string;
-    setSelectedEditionName: React.Dispatch<React.SetStateAction<string>>;
-    isGettingNewsItems: boolean;
-    setIsGettingNewsItems: React.Dispatch<React.SetStateAction<boolean>>;
-    newsItems: EditionItem[];
-    newsItem: EditionItem;
-    setNewsItem: React.Dispatch<React.SetStateAction<EditionItem>>;
-    isSendingToPS: boolean;
-    setIsSendingToPS: React.Dispatch<React.SetStateAction<boolean>>;
-};
+// type NewsItemsProps = {
+// langSchemeNames: string[];
+// editionsInitData: EditionInitData[];
+// onLoadNewsItemsClick: React.MouseEventHandler;
+// onSendToPSClick: React.MouseEventHandler;
+// errors: NewsItemFormError;
+// setErrors: React.Dispatch<React.SetStateAction<NewsItemFormError>>;
+// selectedEditionName: string;
+// setSelectedEditionName: React.Dispatch<React.SetStateAction<string>>;
+// backgroundNames: string[];
+// setBackgroundNames: React.Dispatch<React.SetStateAction<string[]>>;
+// selectedBackground: string;
+// setSelectedBackground: React.Dispatch<React.SetStateAction<string>>;
+// isGettingNewsItems: boolean;
+// setIsGettingNewsItems: React.Dispatch<React.SetStateAction<boolean>>;
+// newsItems: EditionItem[];
+// newsItem: EditionItem;
+// setNewsItem: React.Dispatch<React.SetStateAction<EditionItem>>;
+// isSendingToPS: boolean;
+// setIsSendingToPS: React.Dispatch<React.SetStateAction<boolean>>;
+// };
 
-function SetNewsItems({
-    langSchemeNames,
-    editionsInitData,
-    onLoadNewsItemsClick,
-    onSendToPSClick,
-    errors,
-    setErrors,
-    selectedEditionName,
-    setSelectedEditionName,
-    isGettingNewsItems,
-    setIsGettingNewsItems,
-    newsItems,
-    newsItem,
-    setNewsItem,
-    isSendingToPS,
-    setIsSendingToPS,
-}: NewsItemsProps) {
+function FormSetNewsItems() {
+    // langSchemeNames,
+    // editionsInitData,
+    // onLoadNewsItemsClick,
+    // onSendToPSClick,
+    // errors,
+    // setErrors,
+    // selectedEditionName,
+    // setSelectedEditionName,
+    // backgroundNames,
+    // selectedBackground,
+    // setSelectedBackground,
+    // isGettingNewsItems,
+    // setIsGettingNewsItems,
+    // newsItems,
+    // newsItem,
+    // setNewsItem,
+    // isSendingToPS,
+    // setIsSendingToPS,
+    //NewsItemsProps
     //console.log(`SetNewsItems loading`);
 
     // // define yesterday for default in datePicker
@@ -56,6 +64,21 @@ function SetNewsItems({
     // // define regex for testing numerical values
     // //https://stackoverflow.com/questions/9011524/regex-to-check-whether-a-string-contains-only-numbers
     // const isNumber: RegExp = /^\d+\.?\d*$/;
+    const {
+        langSchemeNames,
+        editionsInitData,
+        newsItems,
+        newsItem,
+        setNewsItem,
+        setSelectedEditionName,
+        backgroundNames,
+        selectedBackground,
+        setSelectedBackground,
+        isGettingNewsItems,
+        isSendingToPS,
+        onLoadNewsItemsClick,
+        onSendToPSClick,
+    } = useContext(NewsContext);
 
     const [schemeName, setSchemeName] = useState('ENM-1');
     const [editionName, setEditionName] = useState('');
@@ -96,10 +119,14 @@ function SetNewsItems({
     };
 
     const onSelectNewsItem = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        let filtered: EditionItem[] = newsItems.filter((item) => {
+        let filtered: EditionItem[] = newsItems.filter((item: EditionItem) => {
             return item.data.headline === e.target.value;
         });
         setNewsItem(filtered[0]);
+    };
+
+    const onSelectBackground = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedBackground(e.target.value);
     };
 
     // set editionNames by schemeName
@@ -123,6 +150,7 @@ function SetNewsItems({
             <h1 className={styles.title}>Set News Item</h1>
             <form autoComplete="off">
                 <div className={styles.responsiveContainer}>
+                    {/* Select Scheme Name */}
                     <div className={styles.responsiveRow}>
                         <label htmlFor="selectSchemeName">
                             Select Language Scheme:
@@ -136,6 +164,7 @@ function SetNewsItems({
                         />
                     </div>
 
+                    {/* Select Edition Name */}
                     <div className={styles.responsiveRow}>
                         <label htmlFor="selectEditionName">
                             Select Edition:
@@ -149,46 +178,69 @@ function SetNewsItems({
                         />
                     </div>
                 </div>
-                {newsItems.length > 0 ? (
-                    <div className={styles.responsiveContainerFlexCol}>
+                {/* Select Background */}
+                <div className={styles.responsiveContainerFlexCol}>
+                    <div className={styles.fullWidthResponsiveRow}>
                         <div className={styles.fullWidthResponsiveRow}>
-                            <label htmlFor="selectNewsItems">
-                                Select News Item:
+                            <label htmlFor="selectBackground">
+                                Select Background:
                             </label>
                             <Select
-                                name="selectNewsItems"
-                                id="selectNewsItems"
-                                value={
-                                    newsItem && 'data' in newsItem
-                                        ? newsItem.data.headline
-                                        : ''
-                                }
-                                onChangeHandler={onSelectNewsItem}
-                                options={newsItems.map((item) => {
-                                    return item.data.headline;
-                                })}
+                                name="selectBackground"
+                                id="selectBackground"
+                                value={selectedBackground}
+                                onChangeHandler={onSelectBackground}
+                                options={backgroundNames}
                             />
                         </div>
-                        <div className={styles.fullWidthResponsiveRow}>
-                            <button onClick={onLoadNewsItemsClick}>
-                                Load News Items
-                            </button>
-                        </div>
                     </div>
-                ) : (
-                    <div className={styles.fullWidthResponsiveRow}>
-                        {isGettingNewsItems ? (
-                            <button disabled>Loading...</button>
-                        ) : (
-                            <button onClick={onLoadNewsItemsClick}>
-                                Load News Items
-                            </button>
-                        )}
-                    </div>
-                )}
+                </div>
+                <div className={styles.responsiveContainerFlexCol}>
+                    {isGettingNewsItems ? (
+                        <button disabled>Loading...</button>
+                    ) : newsItems.length > 0 ? (
+                        <>
+                            {/* Select News Item */}
+                            <div className={styles.fullWidthResponsiveRow}>
+                                <label htmlFor="selectNewsItems">
+                                    Select News Item:
+                                </label>
+                                <Select
+                                    name="selectNewsItems"
+                                    id="selectNewsItems"
+                                    value={
+                                        newsItem && 'data' in newsItem
+                                            ? newsItem.data.headline
+                                            : ''
+                                    }
+                                    onChangeHandler={onSelectNewsItem}
+                                    options={newsItems.map(
+                                        (item: EditionItem) => {
+                                            return item.data.headline;
+                                        }
+                                    )}
+                                />
+                            </div>
+                            {/* Load News Item */}
+                            <div className={styles.fullWidthResponsiveRow}>
+                                <button onClick={onLoadNewsItemsClick}>
+                                    Load News Items
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className={styles.fullWidthResponsiveRow}>
+                                <button onClick={onLoadNewsItemsClick}>
+                                    Load News Items
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
 
-                <div className={styles.responsiveContainer}>
-                    <div className={styles.responsiveRow}>
+                <div className={styles.responsiveContainerFlexCol}>
+                    <div className={styles.fullWidthResponsiveRow}>
                         {isSendingToPS ? (
                             <>
                                 <button disabled>Sending...</button>
@@ -207,4 +259,4 @@ function SetNewsItems({
     );
 }
 
-export { SetNewsItems };
+export { FormSetNewsItems };
