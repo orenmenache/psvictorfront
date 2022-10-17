@@ -2,110 +2,28 @@ import React, { useContext, useEffect, useState } from 'react';
 import { GenericContext } from '../../contexts/GenericContext';
 import { EditionInitData, EditionItem } from '../../types';
 import Select from '../shared/Select';
-import styles from './Form__setNewsItems.module.scss';
+import styles from './Form__setTechItems.module.scss';
 
-// type NewsItemsProps = {
-// langSchemeNames: string[];
-// editionsInitData: EditionInitData[];
-// onLoadNewsItemsClick: React.MouseEventHandler;
-// onSendToPSClick: React.MouseEventHandler;
-// errors: NewsItemFormError;
-// setErrors: React.Dispatch<React.SetStateAction<NewsItemFormError>>;
-// selectedEditionName: string;
-// setSelectedEditionName: React.Dispatch<React.SetStateAction<string>>;
-// backgroundNames: string[];
-// setBackgroundNames: React.Dispatch<React.SetStateAction<string[]>>;
-// selectedBackground: string;
-// setSelectedBackground: React.Dispatch<React.SetStateAction<string>>;
-// isGettingNewsItems: boolean;
-// setIsGettingNewsItems: React.Dispatch<React.SetStateAction<boolean>>;
-// newsItems: EditionItem[];
-// newsItem: EditionItem;
-// setNewsItem: React.Dispatch<React.SetStateAction<EditionItem>>;
-// isSendingToPS: boolean;
-// setIsSendingToPS: React.Dispatch<React.SetStateAction<boolean>>;
-// };
-
-function FormSetNewsItems() {
-    // langSchemeNames,
-    // editionsInitData,
-    // onLoadNewsItemsClick,
-    // onSendToPSClick,
-    // errors,
-    // setErrors,
-    // selectedEditionName,
-    // setSelectedEditionName,
-    // backgroundNames,
-    // selectedBackground,
-    // setSelectedBackground,
-    // isGettingNewsItems,
-    // setIsGettingNewsItems,
-    // newsItems,
-    // newsItem,
-    // setNewsItem,
-    // isSendingToPS,
-    // setIsSendingToPS,
-    //NewsItemsProps
-    //console.log(`SetNewsItems loading`);
-
-    // // define yesterday for default in datePicker
-    // const getYesterday = () => {
-    //     const t = new Date();
-    //     t.setDate(t.getDate() - 1);
-    //     let m = (t.getMonth() + 1).toString();
-    //     let d = t.getDate().toString();
-    //     m = m.length === 1 ? `0${m}` : m;
-    //     d = d.length === 1 ? `0${d}` : d;
-    //     const yesterday = `${t.getFullYear()}-${m}-${d}`;
-    //     return yesterday;
-    // };
-
-    // // define regex for testing numerical values
-    // //https://stackoverflow.com/questions/9011524/regex-to-check-whether-a-string-contains-only-numbers
-    // const isNumber: RegExp = /^\d+\.?\d*$/;
+function FormSetTechItems() {
     const {
         langSchemeNames,
         editionsInitData,
-        newsItems,
-        newsItem,
-        setNewsItem,
+        techItems, // Item Specific
+        techItem, // Item Specific
+        setTechItem, // Item Specific
         setSelectedEditionName,
         backgroundNames,
         selectedBackground,
         setSelectedBackground,
-        isGettingNewsItems,
+        isGettingTechItems, // Item Specific
         isSendingToPS,
-        onLoadNewsItemsClick,
+        onLoadTechItemsClick, // Item Specific
         onSendToPSClick,
     } = useContext(GenericContext);
 
     const [schemeName, setSchemeName] = useState('ENM-1');
     const [editionName, setEditionName] = useState('');
     const [editionList, setEditionList] = useState([] as string[]);
-
-    // const onBlurValidate__GEN = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const value = e.target.value as string;
-    //     const elementName = e.target.name as keyof FormPriceErrorObj;
-    //     const check: boolean = isNumber.test(value);
-
-    //     if (!check) {
-    //         const error = `${elementName} value is not numeric.`;
-    //         let newErrors = { ...errors };
-    //         newErrors[elementName] = error;
-    //         setErrors(newErrors);
-    //         console.log(newErrors);
-    //     } else {
-    //         let newErrors: FormPriceErrorObj = { ...errors };
-    //         delete newErrors[elementName];
-    //         setErrors(newErrors);
-    //         let formDataKey = elementName.slice(0, 1);
-    //         console.log(`formDataKey: ${formDataKey}`);
-    //         let newFormData: PriceData__DBRecord = { ...formData };
-    //         //@ts-ignore
-    //         newFormData[formDataKey] = value;
-    //         setFormData(newFormData);
-    //     }
-    // };
 
     const onSelectEditionName = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setEditionName(() => e.target.value as string);
@@ -117,11 +35,11 @@ function FormSetNewsItems() {
         console.log(`OnSelectScheme`);
     };
 
-    const onSelectNewsItem = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        let filtered: EditionItem[] = newsItems.filter((item: EditionItem) => {
-            return item.data.headline === e.target.value;
+    const onSelectTechItem = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        let filtered: EditionItem[] = techItems.filter((item: EditionItem) => {
+            return item.data.assetName === e.target.value;
         });
-        setNewsItem(filtered[0]);
+        setTechItem(filtered[0]);
     };
 
     const onSelectBackground = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -145,8 +63,8 @@ function FormSetNewsItems() {
     }, [editionsInitData, schemeName]);
 
     return (
-        <div className={styles.setNewsItemMainContainer}>
-            <h1 className={styles.title}>Set News Item</h1>
+        <div className={styles.setTechItemMainContainer}>
+            <h1 className={styles.title}>Set Tech Item</h1>
             <form autoComplete="off">
                 <div className={styles.responsiveContainer}>
                     {/* Select Scheme Name */}
@@ -195,43 +113,43 @@ function FormSetNewsItems() {
                     </div>
                 </div>
                 <div className={styles.responsiveContainerFlexCol}>
-                    {isGettingNewsItems ? (
+                    {isGettingTechItems ? (
                         <button disabled>Loading...</button>
-                    ) : newsItems.length > 0 ? (
+                    ) : techItems.length > 0 ? (
                         <>
-                            {/* Select News Item */}
+                            {/* Select Tech Item */}
                             <div className={styles.fullWidthResponsiveRow}>
-                                <label htmlFor="selectNewsItems">
-                                    Select News Item:
+                                <label htmlFor="selectTechItems">
+                                    Select Tech Item:
                                 </label>
                                 <Select
-                                    name="selectNewsItems"
-                                    id="selectNewsItems"
+                                    name="selectTechItems"
+                                    id="selectTechItems"
                                     value={
-                                        newsItem && 'data' in newsItem
-                                            ? newsItem.data.headline
+                                        techItem && 'data' in techItem
+                                            ? techItem.data.assetName
                                             : ''
                                     }
-                                    onChangeHandler={onSelectNewsItem}
-                                    options={newsItems.map(
+                                    onChangeHandler={onSelectTechItem}
+                                    options={techItems.map(
                                         (item: EditionItem) => {
-                                            return item.data.headline;
+                                            return item.data.assetName;
                                         }
                                     )}
                                 />
                             </div>
-                            {/* Load News Item */}
+                            {/* Load Tech Item */}
                             <div className={styles.fullWidthResponsiveRow}>
-                                <button onClick={onLoadNewsItemsClick}>
-                                    Load News Items
+                                <button onClick={onLoadTechItemsClick}>
+                                    Load Tech Items
                                 </button>
                             </div>
                         </>
                     ) : (
                         <>
                             <div className={styles.fullWidthResponsiveRow}>
-                                <button onClick={onLoadNewsItemsClick}>
-                                    Load News Items
+                                <button onClick={onLoadTechItemsClick}>
+                                    Load Tech Items
                                 </button>
                             </div>
                         </>
@@ -258,4 +176,4 @@ function FormSetNewsItems() {
     );
 }
 
-export { FormSetNewsItems };
+export { FormSetTechItems };

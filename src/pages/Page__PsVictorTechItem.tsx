@@ -1,83 +1,30 @@
-import { useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { GenericContext } from '../contexts/GenericContext';
 import ErrorTerminal from '../components/shared/ErrorTerminal';
-import { FormSetNewsItems } from '../components/forms/Form__setNewsItems';
 import { LangSheet } from '../types';
+import { FormSetTechItems } from '../components/forms/Form__setTechItems';
 
-function PagePsVictorNewsItem() {
+function PagePsVictorTechItem() {
     const {
         ROUTES,
         errors,
-        //setErrors,
-        //langSchemeNames,
         setLangSchemeNames,
-        //editionsInitData,
         setEditionsInitData,
-        //newsItems,
-        setNewsItems,
-        newsItem,
-        setNewsItem,
+        setTechItems, // Item Specific
+        techItem, // Item Specific
+        setTechItem, // Item Specific
         selectedEditionName,
-        //setSelectedEditionName,
-        //backgroundNames,
         setBackgroundNames,
         selectedBackground,
-        //setSelectedBackground,
         isLoading,
         setIsLoading,
-        isGettingNewsItems,
-        setIsGettingNewsItems,
+        isGettingTechItems, // Item Specific
+        setIsGettingTechItems, // Item Specific
         isSendingToPS,
         setIsSendingToPS,
-        // newsItemsLoaded,
-        // setNewsItemsLoaded,
-        // onLoadNewsItemsClick,
-        // onSendToPSClick,
         date,
         setDate,
     } = useContext(GenericContext);
-
-    // const SmartServerRoute = `http://localhost:5016/api/psVictor/`;
-
-    // const ROUTES = {
-    //     editionMeta: `${SmartServerRoute}editionMeta`,
-    //     langSchemes: `${SmartServerRoute}langScheme`,
-    //     bluePrint: `${SmartServerRoute}bluePrint`,
-    //     autoItemPicker: `${SmartServerRoute}autoItemPicker`,
-    //     singleItem: `${SmartServerRoute}singleItem`,
-    //     itemCluster: `${SmartServerRoute}itemCluster`,
-    //     files: `${SmartServerRoute}files`,
-    // };
-
-    // //console.log(`SetPricePage loading`);
-    // const [errors, setErrors] = useState({} as NewsItemFormError);
-    // const [langSchemeNames, setLangSchemeNames] = useState([] as string[]);
-    // const [editionsInitData, setEditionsInitData] = useState(
-    //     [] as { editionName: string; schemeName: string }[]
-    // );
-    // const [newsItems, setNewsItems] = useState([] as EditionItem[]);
-    // const [newsItem, setNewsItem] = useState({} as EditionItem);
-    // const [selectedEditionName, setSelectedEditionName] = useState('IMMFX EN');
-
-    // const [backgroundNames, setBackgroundNames] = useState([] as string[]);
-    // const [selectedBackground, setSelectedBackground] = useState('');
-
-    // const [isLoading, setIsLoading] = useState(true);
-    // const [isGettingNewsItems, setIsGettingNewsItems] = useState(false);
-    // const [isSendingToPS, setIsSendingToPS] = useState(false);
-    // const [newsItemsLoaded, setNewsItemsLoaded] = useState(false);
-
-    // const onLoadNewsItemsClick = async (e: React.MouseEvent) => {
-    //     e.preventDefault();
-    //     setIsGettingNewsItems(true);
-    //     console.log(`setIsGettingNewsItems to true`);
-    // };
-
-    // const onSendToPSClick = async (e: React.MouseEvent) => {
-    //     e.preventDefault();
-    //     setIsSendingToPS(true);
-    //     console.log(`setIsSendingToPS to true`);
-    // };
 
     // Get all langScheme names
     useEffect(() => {
@@ -138,11 +85,11 @@ function PagePsVictorNewsItem() {
         getInitData();
     }, [ROUTES.files, setBackgroundNames]);
 
-    // Load news items
+    // Load tech items
     useEffect(() => {
-        if (isGettingNewsItems) {
-            console.log(`Loading news items`);
-            const getNewsItems = async () => {
+        if (isGettingTechItems) {
+            console.log(`Loading tech items`);
+            const getTechItems = async () => {
                 const response: Response = await fetch(
                     `${ROUTES.editionMeta}/${selectedEditionName}`
                 );
@@ -154,27 +101,35 @@ function PagePsVictorNewsItem() {
                 }
 
                 const langSheet = json as LangSheet;
-                const newsItems = langSheet.data.newsItems;
+                const techItems = langSheet.data.techItems;
+                for (let i in techItems) {
+                    let techItemRaw = techItems[i];
+                    for (let n in techItemRaw.data) {
+                        console.log(`n ${n} ${techItemRaw.data[n]}`);
+                    }
+
+                    //techItemRaw['support'] = techItemRaw['l2'];
+                    //techItemRaw['resistance'] = techItemRaw['s2'];
+                }
                 const editionDate = langSheet.date;
 
-                setNewsItems(newsItems);
-                setNewsItem(newsItems[0]);
+                setTechItems(techItems);
+                setTechItem(techItems[0]);
                 setDate(editionDate);
-                setIsGettingNewsItems(false);
+                setIsGettingTechItems(false);
             };
-            getNewsItems();
+            getTechItems();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isGettingNewsItems]);
+    }, [isGettingTechItems]);
 
     // Send to PS
     useEffect(() => {
         if (isSendingToPS) {
             console.log(`Sending to PS`);
             const sendData = async () => {
-                delete newsItem.data.mark;
                 const response: Response = await fetch(
-                    `${ROUTES.singleItem}/news`,
+                    `${ROUTES.singleItem}/tech`,
                     {
                         method: 'POST', // *GET, POST, PUT, DELETE, etc.
                         //mode: 'cors', // no-cors, *cors, same-origin
@@ -190,7 +145,7 @@ function PagePsVictorNewsItem() {
                             backgroundFilePath: selectedBackground,
                             projName: selectedEditionName,
                             date,
-                            ...newsItem.data,
+                            ...techItem.data,
                         }), // body data type must match "Content-Type" header
                     }
                 );
@@ -209,7 +164,7 @@ function PagePsVictorNewsItem() {
                 <div>Loading...</div>
             ) : (
                 <>
-                    <FormSetNewsItems />
+                    <FormSetTechItems />
                     <ErrorTerminal errors={errors} />
                 </>
             )}
@@ -217,4 +172,4 @@ function PagePsVictorNewsItem() {
     );
 }
 
-export default PagePsVictorNewsItem;
+export default PagePsVictorTechItem;

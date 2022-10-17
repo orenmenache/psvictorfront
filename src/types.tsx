@@ -10,4 +10,9 @@ export type EditionInitData = {
     schemeName: string;
 };
 
-export type NewsItemFormError = { [key: string]: string };
+export type ItemFormError = { [key: string]: string };
+
+export type LangSheet = {
+    data: { [key in BlueKey]: EditionItem[] };
+    date: string;
+};

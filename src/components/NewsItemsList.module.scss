@@ -1,9 +1,0 @@
-@import '../styles/OrensUL.scss';
-
-/*
-    scss classNames must be camleCased
-*/
-
-.unsortedListContainer {
-    @include genericUnsortedListContainer;
-}

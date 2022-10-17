@@ -1,12 +1,12 @@
 import { ReactNode, useState } from 'react';
-import { NewsContext } from '../contexts/NewsContext';
-import { EditionItem, NewsItemFormError } from '../types';
+import { GenericContext } from '../contexts/GenericContext';
+import { EditionItem, ItemFormError } from '../types';
 
-type NewsProviderProps = {
+type GenericProviderProps = {
     children: ReactNode;
 };
 
-const NewsProvider = ({ children }: NewsProviderProps) => {
+const GenericProvider = ({ children }: GenericProviderProps) => {
     const SmartServerRoute = `http://localhost:5016/api/psVictor/`;
 
     const ROUTES = {
@@ -19,28 +19,39 @@ const NewsProvider = ({ children }: NewsProviderProps) => {
         files: `${SmartServerRoute}files`,
     };
 
-    //console.log(`SetPricePage loading`);
-    const [errors, setErrors] = useState({} as NewsItemFormError);
+    const [errors, setErrors] = useState({} as ItemFormError);
     const [langSchemeNames, setLangSchemeNames] = useState([] as string[]);
     const [editionsInitData, setEditionsInitData] = useState(
         [] as { editionName: string; schemeName: string }[]
     );
     const [newsItems, setNewsItems] = useState([] as EditionItem[]);
     const [newsItem, setNewsItem] = useState({} as EditionItem);
+    const [techItems, setTechItems] = useState([] as EditionItem[]);
+    const [techItem, setTechItem] = useState({} as EditionItem);
     const [selectedEditionName, setSelectedEditionName] = useState('IMMFX EN');
+    const [date, setDate] = useState('');
 
     const [backgroundNames, setBackgroundNames] = useState([] as string[]);
     const [selectedBackground, setSelectedBackground] = useState('');
 
     const [isLoading, setIsLoading] = useState(true);
     const [isGettingNewsItems, setIsGettingNewsItems] = useState(false);
+    const [isGettingTechItems, setIsGettingTechItems] = useState(false);
     const [isSendingToPS, setIsSendingToPS] = useState(false);
     const [newsItemsLoaded, setNewsItemsLoaded] = useState(false);
+    const [newsItemLoaded, setNewsItemLoaded] = useState(false);
+    const [techItemLoaded, setTechItemLoaded] = useState(false);
 
     const onLoadNewsItemsClick = async (e: React.MouseEvent) => {
         e.preventDefault();
         setIsGettingNewsItems(true);
         console.log(`setIsGettingNewsItems to true`);
+    };
+
+    const onLoadTechItemsClick = async (e: React.MouseEvent) => {
+        e.preventDefault();
+        setIsGettingTechItems(true);
+        console.log(`setIsGettingTechItems to true`);
     };
 
     const onSendToPSClick = async (e: React.MouseEvent) => {
@@ -50,7 +61,7 @@ const NewsProvider = ({ children }: NewsProviderProps) => {
     };
 
     return (
-        <NewsContext.Provider
+        <GenericContext.Provider
             value={{
                 ROUTES,
                 errors,
@@ -63,6 +74,10 @@ const NewsProvider = ({ children }: NewsProviderProps) => {
                 setNewsItems,
                 newsItem,
                 setNewsItem,
+                techItems,
+                setTechItems,
+                techItem,
+                setTechItem,
                 selectedEditionName,
                 setSelectedEditionName,
                 backgroundNames,
@@ -73,17 +88,24 @@ const NewsProvider = ({ children }: NewsProviderProps) => {
                 setIsLoading,
                 isGettingNewsItems,
                 setIsGettingNewsItems,
+                isGettingTechItems,
+                setIsGettingTechItems,
                 isSendingToPS,
                 setIsSendingToPS,
                 newsItemsLoaded,
                 setNewsItemsLoaded,
+                techItemLoaded,
+                setTechItemLoaded,
                 onLoadNewsItemsClick,
+                onLoadTechItemsClick,
                 onSendToPSClick,
+                date,
+                setDate,
             }}
         >
             {children}
-        </NewsContext.Provider>
+        </GenericContext.Provider>
     );
 };
 
-export default NewsProvider;
+export default GenericProvider;

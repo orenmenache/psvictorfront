@@ -1,16 +1,16 @@
-//import SendNewsItemToPS from './pages/Page__PsVictorNewsItems';
-import { NewsContext } from './contexts/NewsContext';
-import PagePsVictorNewsItem from './pages/Page__PsVictorNewsItem';
-//import PagePsVictorTechItem from './pages/Page__PsVictorTechItems';
+import { Fragment } from 'react';
 import { Routes, Route } from 'react-router-dom';
+import PagePsVictorNewsItem from './pages/Page__PsVictorNewsItem';
+import PagePsVictorTechItem from './pages/Page__PsVictorTechItem';
+
 import NavBar from './pages/NavBar';
-import NewsProvider from './providers/NewsProvider';
+import GenericProvider from './providers/GenericProvider';
 
 function App() {
     return (
         <>
-            <NavBar />
-            <NewsProvider>
+            <GenericProvider>
+                <NavBar />
                 <Routes>
                     <Route
                         path="/"
@@ -20,13 +20,17 @@ function App() {
                             </>
                         }
                     />
-
                     <Route
                         path="/singleNewsItem"
                         element={<PagePsVictorNewsItem />}
                     />
+
+                    <Route
+                        path="/singleTechItem"
+                        element={<PagePsVictorTechItem />}
+                    />
                 </Routes>
-            </NewsProvider>
+            </GenericProvider>
         </>
     );
 }
