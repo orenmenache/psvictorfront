@@ -35,17 +35,6 @@ function FormSetSixTechItems() {
         console.log(`OnSelectScheme`);
     };
 
-    const onSelectTechItem = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        let filtered: EditionItem[] = techItems.filter((item: EditionItem) => {
-            return item.data.assetName === e.target.value;
-        });
-        setTechItem(filtered[0]);
-    };
-
-    const onSelectBackground = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedBackground(e.target.value);
-    };
-
     // set editionNames by schemeName
     useEffect(() => {
         console.log(`onChangeSchemeName: ${schemeName}`);
@@ -95,50 +84,12 @@ function FormSetSixTechItems() {
                         />
                     </div>
                 </div>
-                {/* Select Background */}
-                <div className={styles.responsiveContainerFlexCol}>
-                    <div className={styles.fullWidthResponsiveRow}>
-                        <div className={styles.fullWidthResponsiveRow}>
-                            <label htmlFor="selectBackground">
-                                Select Background:
-                            </label>
-                            <Select
-                                name="selectBackground"
-                                id="selectBackground"
-                                value={selectedBackground}
-                                onChangeHandler={onSelectBackground}
-                                options={backgroundNames}
-                            />
-                        </div>
-                    </div>
-                </div>
                 <div className={styles.responsiveContainerFlexCol}>
                     {isGettingTechItems ? (
                         <button disabled>Loading...</button>
                     ) : techItems.length > 0 ? (
                         <>
-                            {/* Select Tech Item */}
-                            <div className={styles.fullWidthResponsiveRow}>
-                                <label htmlFor="selectTechItems">
-                                    Select Tech Item:
-                                </label>
-                                <Select
-                                    name="selectTechItems"
-                                    id="selectTechItems"
-                                    value={
-                                        techItem && 'data' in techItem
-                                            ? techItem.data.assetName
-                                            : ''
-                                    }
-                                    onChangeHandler={onSelectTechItem}
-                                    options={techItems.map(
-                                        (item: EditionItem) => {
-                                            return item.data.assetName;
-                                        }
-                                    )}
-                                />
-                            </div>
-                            {/* Load Tech Item */}
+                            {/* Load Tech Items */}
                             <div className={styles.fullWidthResponsiveRow}>
                                 <button onClick={onLoadTechItemsClick}>
                                     Load Tech Items
@@ -147,6 +98,7 @@ function FormSetSixTechItems() {
                         </>
                     ) : (
                         <>
+                            {/* Load Tech Items */}
                             <div className={styles.fullWidthResponsiveRow}>
                                 <button onClick={onLoadTechItemsClick}>
                                     Load Tech Items
