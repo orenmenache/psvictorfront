@@ -9,12 +9,7 @@ function FormSetSixTechItems() {
         langSchemeNames,
         editionsInitData,
         techItems, // Item Specific
-        techItem, // Item Specific
-        setTechItem, // Item Specific
         setSelectedEditionName,
-        backgroundNames,
-        selectedBackground,
-        setSelectedBackground,
         isGettingTechItems, // Item Specific
         isSendingToPS,
         onLoadTechItemsClick, // Item Specific
