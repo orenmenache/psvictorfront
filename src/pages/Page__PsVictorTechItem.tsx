@@ -8,16 +8,12 @@ function PagePsVictorTechItem() {
     const {
         ROUTES,
         errors,
-        setLangSchemeNames,
-        setEditionsInitData,
         setTechItems, // Item Specific
         techItem, // Item Specific
         setTechItem, // Item Specific
         selectedEditionName,
-        setBackgroundNames,
         selectedBackground,
         isLoading,
-        setIsLoading,
         isGettingTechItems, // Item Specific
         setIsGettingTechItems, // Item Specific
         isSendingToPS,
@@ -25,65 +21,6 @@ function PagePsVictorTechItem() {
         date,
         setDate,
     } = useContext(GenericContext);
-
-    // Get all langScheme names
-    useEffect(() => {
-        console.log(`Loading langSchemes`);
-        const getInitData = async () => {
-            const response: Response = await fetch(
-                `${ROUTES.langSchemes}/allNames`
-            );
-            const json = await response.json();
-
-            if ('errorMessage' in json) {
-                console.log(json.errorMessage);
-                throw json.errorMessage;
-            }
-            console.log(json);
-            setLangSchemeNames(json);
-        };
-        getInitData();
-    }, [ROUTES.langSchemes, setLangSchemeNames]);
-
-    // Get editionNames with langScheme names
-    useEffect(() => {
-        console.log(`Loading editionNames`);
-        const getEditionNames = async () => {
-            const response: Response = await fetch(
-                `${ROUTES.editionMeta}/namesAndLangSchemes`
-            );
-            const json = await response.json();
-
-            if ('errorMessage' in json) {
-                console.log(json.errorMessage);
-                throw json.errorMessage;
-            }
-            console.log(json);
-            setEditionsInitData(json);
-            setIsLoading(false);
-        };
-        getEditionNames();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [ROUTES.editionMeta]);
-
-    // Get all background names
-    useEffect(() => {
-        console.log(`Loading backgrounds`);
-        const getInitData = async () => {
-            const response: Response = await fetch(
-                `${ROUTES.files}/backgrounds`
-            );
-            const json = await response.json();
-
-            if ('errorMessage' in json) {
-                console.log(json.errorMessage);
-                throw json.errorMessage;
-            }
-            console.log(json);
-            setBackgroundNames(json);
-        };
-        getInitData();
-    }, [ROUTES.files, setBackgroundNames]);
 
     // Load tech items
     useEffect(() => {
@@ -102,15 +39,15 @@ function PagePsVictorTechItem() {
 
                 const langSheet = json as LangSheet;
                 const techItems = langSheet.data.techItems;
-                for (let i in techItems) {
-                    let techItemRaw = techItems[i];
-                    for (let n in techItemRaw.data) {
-                        console.log(`n ${n} ${techItemRaw.data[n]}`);
-                    }
+                // for (let i in techItems) {
+                //     let techItemRaw = techItems[i];
+                //     for (let n in techItemRaw.data) {
+                //         console.log(`n ${n} ${techItemRaw.data[n]}`);
+                //     }
 
-                    //techItemRaw['support'] = techItemRaw['l2'];
-                    //techItemRaw['resistance'] = techItemRaw['s2'];
-                }
+                //     //techItemRaw['support'] = techItemRaw['l2'];
+                //     //techItemRaw['resistance'] = techItemRaw['s2'];
+                // }
                 const editionDate = langSheet.date;
 
                 setTechItems(techItems);
@@ -123,7 +60,7 @@ function PagePsVictorTechItem() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isGettingTechItems]);
 
-    // Send to PS
+    // Send single TECH item to PS
     useEffect(() => {
         if (isSendingToPS) {
             console.log(`Sending to PS`);
