@@ -4,12 +4,18 @@ import { Link } from 'react-router-dom';
 function NavBar() {
     return (
         <nav className={styles.navbar}>
-            <Link to="/singleNewsItem">
-                <h1>singleNewsItem</h1>
-            </Link>
-            <Link to="/singleTechItem">
-                <h1>singleTechItem</h1>
-            </Link>
+            <ul>
+                <li>
+                    <Link to="/singleNewsItem">
+                        <h2>singleNewsItem</h2>
+                    </Link>
+                </li>
+                <li>
+                    <Link to="/singleTechItem">
+                        <h2>singleTechItem</h2>
+                    </Link>
+                </li>
+            </ul>
         </nav>
     );
 }
