@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
 import PagePsVictorNewsItem from './pages/Page__PsVictorNewsItem';
-import PagePsVictorTechItem from './pages/Page__PsVictorTechItem';
+//import PagePsVictorTechItem from './pages/Page__PsVictorTechItem';
 
 import NavBar from './pages/NavBar';
-import GenericProvider from './providers/GenericProvider';
+import { GenericProvider } from './providers/GenericProvider';
 import HomePage from './pages/Home';
 
 function App() {
@@ -12,19 +12,16 @@ function App() {
             <GenericProvider>
                 <NavBar />
                 <Routes>
-                    <Route
-                        path="/"
-                        element={<HomePage />}
-                    />
+                    <Route path="/" element={<HomePage />} />
                     <Route
                         path="/singleNewsItem"
                         element={<PagePsVictorNewsItem />}
                     />
 
-                    <Route
+                    {/* <Route
                         path="/singleTechItem"
                         element={<PagePsVictorTechItem />}
-                    />
+                    /> */}
                 </Routes>
             </GenericProvider>
         </>

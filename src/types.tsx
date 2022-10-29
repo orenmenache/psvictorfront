@@ -10,9 +10,31 @@ export type EditionInitData = {
     schemeName: string;
 };
 
-export type ItemFormError = { [key: string]: string };
-
 export type LangSheet = {
     data: { [key in BlueKey]: EditionItem[] };
     date: string;
 };
+
+export type FormInputKeys =
+    | 'sendToPS'
+    | 'schemeName'
+    | 'editionName'
+    | 'backgroundFilePath'
+    | 'newsItemHeadline'
+    | 'loadNewsItems'
+    | 'editionNamesAndSchemes'
+    | 'date'
+    | 'outgoingData';
+
+export type OutgoingData = {
+    projName: string;
+    backgroundFilePath: string;
+    date: string;
+    headline: string;
+    description: string;
+    narration: string;
+};
+
+export type NewsFormInputData = { [key in FormInputKeys]: string };
+export type NewsFormIsLoading = { [key in FormInputKeys]?: boolean };
+export type ItemFormError = { [key in FormInputKeys]?: string };
