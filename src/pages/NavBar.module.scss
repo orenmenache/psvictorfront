@@ -33,3 +33,32 @@
         }
     }
 }
+
+
+    @media (max-width:768px) {
+    .navbar{
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    padding: 0 5rem 0 1rem;
+        ul{
+        display: block;
+    }
+    }
+}
+
+.burgerMenu{ 
+    
+    position: fixed;
+    right: 0;
+    top: 0;
+    margin: 30px 30px 0 0;
+    display: block;
+    margin-left: auto;
+    z-index: 1;
+    img{
+        width: 20px;
+        height: 20px;
+    }
+}

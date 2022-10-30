@@ -5,6 +5,8 @@ import PagePsVictorNewsItem from './pages/Page__PsVictorNewsItem';
 import NavBar from './pages/NavBar';
 import { GenericProvider } from './providers/GenericProvider';
 import HomePage from './pages/Home';
+import ItemPageImages from './components/ItemPageImages/ItemPageImages';
+import ItemPageImagesDetails from './components/ItemPageImagesDetails/ItemPageImagesDetails';
 
 function App() {
     return (
@@ -22,6 +24,8 @@ function App() {
                         path="/singleTechItem"
                         element={<PagePsVictorTechItem />}
                     /> */}
+                    <Route path='/ItemPageImages' element={<ItemPageImages />} />
+                    <Route path='/ItemPageImages/:id' element={ <ItemPageImagesDetails/>} />
                 </Routes>
             </GenericProvider>
         </>
