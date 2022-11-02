@@ -37,7 +37,7 @@ export const SelectFetch = ({
         console.log(`Value changed to ${e.target.value}`);
         let newFormData = { ...formData };
         newFormData[name] = e.target.value;
-        setFormData(() => newFormData);
+        setFormData(newFormData);
     };
 
     /**

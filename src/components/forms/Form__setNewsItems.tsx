@@ -127,18 +127,23 @@ function FormSetNewsItems({
     useEffect(() => {
         try {
             console.log(`onChangeSchemeName: ${formData.schemeName}`);
-            const filterEditions = () => {
-                const filteredEditions: EditionInitData[] =
-                    editionNamesAndSchemes.filter(
-                        (edition: EditionInitData) => {
-                            return edition.schemeName === formData.schemeName;
-                        }
-                    );
-                setEditionList(
-                    filteredEditions.map((edition) => edition.editionName)
-                );
-            };
-            filterEditions();
+            const filteredEditions: EditionInitData[] =
+                editionNamesAndSchemes.filter((edition: EditionInitData) => {
+                    return edition.schemeName === formData.schemeName;
+                });
+
+            const editionNames = filteredEditions.map(
+                (edition) => edition.editionName
+            );
+            setEditionList(editionNames);
+
+            // update formData
+            let newFormData = { ...formData };
+            newFormData.editionName = editionNames[0];
+            setFormData(newFormData);
+
+            // clean news items
+            setNewsItemsHeadlines([]);
         } catch (e) {
             // Set Error
             let newErrors: ItemFormError = { ...errors };

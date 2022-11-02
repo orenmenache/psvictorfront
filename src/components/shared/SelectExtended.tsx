@@ -1,4 +1,4 @@
-import React /*, { useContext }*/ from 'react';
+import React, { useEffect, useState /*, { useContext }*/ } from 'react';
 import { FormInputKeys } from '../../types';
 //import { GenericContext } from '../../contexts/GenericContext';
 
@@ -32,7 +32,7 @@ export const SelectExtended = ({
             <select
                 name={name}
                 id={name}
-                value={formData[name] || ''}
+                value={formData[name]}
                 onChange={onChangeHandler}
             >
                 {options.map((option) => (
