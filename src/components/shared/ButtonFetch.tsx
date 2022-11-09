@@ -1,10 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import { GenericContext } from '../../contexts/GenericContext';
+import { GET_TOF } from '../../logic/JSONGET';
+import { GenericProviderValues } from '../../providers/GenericProvider';
 import { FormInputKeys } from '../../types';
-
-/**
- *
- */
 
 type ButtonProps = {
     name: FormInputKeys;
@@ -19,41 +17,33 @@ export const ButtonFetch = ({
     fetchUrl,
     setData,
 }: ButtonProps) => {
-    const { errors, setErrors } = useContext(GenericContext);
+    const { errors, setErrors, clearErrorIfExists } = useContext(
+        GenericContext
+    ) as GenericProviderValues;
 
     const [isClicked, setIsClicked] = useState(false);
 
     const onClickHandler = (e: React.MouseEvent) => {
         e.preventDefault();
         setIsClicked(true);
-        console.log(`setClicked ${name} to true`);
+        console.log(`%csetClicked ${name} to true`, 'color: gray');
     };
 
     useEffect(() => {
         try {
             if (isClicked) {
-                console.log(`Loading Data`);
-                console.log(`fetchUrl: ${fetchUrl}`);
-                const getData = async () => {
-                    const response: Response = await fetch(fetchUrl);
-                    const json = await response.json();
-
-                    if ('errorMessage' in json) {
-                        console.log(json.errorMessage);
-                        throw json.errorMessage;
-                    }
-
-                    console.log(`Setting data in Button Fetch`);
-                    console.log(json);
-                    setData(json);
+                const GET = async () => {
+                    await GET_TOF(fetchUrl, setData, true);
+                    clearErrorIfExists(name);
                     setIsClicked(false);
                 };
-                getData();
+                GET();
             }
-        } catch (e) {
+        } catch (e: any) {
             let newErrors = { ...errors };
             newErrors[name] = e;
             setErrors(() => newErrors);
+            setIsClicked(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isClicked]);

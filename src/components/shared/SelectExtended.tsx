@@ -1,4 +1,10 @@
-import React, { useEffect, useState /*, { useContext }*/ } from 'react';
+import React, {
+    useContext,
+    useEffect,
+    useState /*, { useContext }*/,
+} from 'react';
+import { GenericContext } from '../../contexts/GenericContext';
+import { GenericProviderValues } from '../../providers/GenericProvider';
 import { FormInputKeys } from '../../types';
 //import { GenericContext } from '../../contexts/GenericContext';
 
@@ -17,14 +23,34 @@ export const SelectExtended = ({
     formData,
     setFormData,
 }: SelectProps) => {
-    //const { errors, setErrors } = useContext(GenericContext);
+    const { errors, setErrors, clearErrorIfExists } = useContext(
+        GenericContext
+    ) as GenericProviderValues;
+
+    /**
+     * Whenever the options change,
+     * if they're not empty, load the first option into formData
+     */
+    useEffect(() => {
+        if (options && options.length > 0) {
+            console.log(`%cValue changed to ${options[0]}`, 'color: magenta');
+            let newFormData = { ...formData };
+            newFormData[name] = options[0];
+            setFormData(newFormData);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [options]);
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        console.log(`Value changed to ${e.target.value}`);
+        console.log(`%cValue changed to ${e.target.value}`, 'color: magenta');
         let newFormData = { ...formData };
         newFormData[name] = e.target.value;
         setFormData(newFormData);
     };
+
+    if (!options || options.length === 0) {
+        return <></>;
+    }
 
     return (
         <>
@@ -35,8 +61,8 @@ export const SelectExtended = ({
                 value={formData[name]}
                 onChange={onChangeHandler}
             >
-                {options.map((option) => (
-                    <option key={option} value={option}>
+                {options.map((option, i) => (
+                    <option key={i + option} value={option}>
                         {option}
                     </option>
                 ))}

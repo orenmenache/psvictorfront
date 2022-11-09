@@ -51,17 +51,22 @@ function FormSetNewsItems({
         e.preventDefault();
         setIsPostButtonClicked(true);
         try {
-            console.log(`setIsPostButtonClicked true`);
+            console.log(`%csetIsPostButtonClicked true`, 'color: orange');
+            console.log(`background: ${formData.backgroundFilePath}`);
+            console.log(`%c${formData}`, 'color: pink');
 
-            const stringified = JSON.stringify({
+            const outGoingData: OutgoingData = {
                 backgroundFilePath: formData.backgroundFilePath,
                 projName: formData.editionName,
                 date: langSheet.date,
-                ...newsItem.data,
-            } as OutgoingData);
+                headline: newsItem.data.headline,
+                description: newsItem.data.description,
+                narration: newsItem.data.narration,
+            };
 
-            console.log(`stringifiedData`);
-            console.warn(stringified);
+            const stringified: string = JSON.stringify(outGoingData);
+
+            console.log(`%cstringifiedData: ${stringified}`, 'color: green');
 
             setOutgoingData(stringified);
             clearErrorIfExists(`outgoingData`);
@@ -123,6 +128,8 @@ function FormSetNewsItems({
 
     /**
      * Set editionNames by schemeName
+     * Update formData
+     * Clear news items
      */
     useEffect(() => {
         try {
@@ -142,7 +149,7 @@ function FormSetNewsItems({
             newFormData.editionName = editionNames[0];
             setFormData(newFormData);
 
-            // clean news items
+            // clear news items
             setNewsItemsHeadlines([]);
         } catch (e) {
             // Set Error
@@ -300,20 +307,24 @@ function FormSetNewsItems({
                     </div>
                 </div>
 
-                <div className={styles.responsiveContainerFlexCol}>
-                    <div className={styles.fullWidthResponsiveRow}>
-                        <ButtonPost
-                            name="sendToPS"
-                            label="Send To Photoshop"
-                            postUrl={`${ROUTES.singleItem}/news`}
-                            isClicked={isPostButtonClicked}
-                            setIsClicked={setIsPostButtonClicked}
-                            clickHandler={postClickHandler}
-                            stringifiedData={outgoingData}
-                            setResponse={setPsResponse}
-                        />
+                {newsItemsHeadlines.length === 0 ? (
+                    <></>
+                ) : (
+                    <div className={styles.responsiveContainerFlexCol}>
+                        <div className={styles.fullWidthResponsiveRow}>
+                            <ButtonPost
+                                name="sendToPS"
+                                label="Send To Photoshop"
+                                postUrl={`${ROUTES.singleItem}/news`}
+                                isClicked={isPostButtonClicked}
+                                setIsClicked={setIsPostButtonClicked}
+                                clickHandler={postClickHandler}
+                                stringifiedData={outgoingData}
+                                setResponse={setPsResponse}
+                            />
+                        </div>
                     </div>
-                </div>
+                )}
             </form>
         </div>
     );

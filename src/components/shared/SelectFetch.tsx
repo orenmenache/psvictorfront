@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import { GenericContext } from '../../contexts/GenericContext';
+import { GenericProviderValues } from '../../providers/GenericProvider';
 import { FormInputKeys } from '../../types';
 
 /**
@@ -29,12 +30,14 @@ export const SelectFetch = ({
     isLoadingData,
     setIsLoadingData,
 }: SelectProps) => {
-    const { errors, setErrors } = useContext(GenericContext);
+    const { errors, setErrors, clearErrorIfExists } = useContext(
+        GenericContext
+    ) as GenericProviderValues;
 
     const [options, setOptions] = useState([] as string[]);
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        console.log(`Value changed to ${e.target.value}`);
+        console.log(`%cValue changed to ${e.target.value}`, 'color: purple');
         let newFormData = { ...formData };
         newFormData[name] = e.target.value;
         setFormData(newFormData);
@@ -73,6 +76,10 @@ export const SelectFetch = ({
                     setOptions(mappedOptions);
                 }
 
+                console.log(
+                    `%cSetting initial value to mappedOptions[0]: ${mappedOptions[0]}`,
+                    'color: purple'
+                );
                 let newFormData = { ...formData };
                 newFormData[name] = mappedOptions[0];
                 setFormData(() => newFormData);
@@ -82,9 +89,10 @@ export const SelectFetch = ({
                 setIsLoadingData(newLoadingData);
             };
             fetchOptions();
+            clearErrorIfExists(name);
         } catch (e) {
             let newErrors = { ...errors };
-            newErrors[name] = e;
+            newErrors[name] = e as any;
             setErrors(() => newErrors);
         }
 
@@ -100,8 +108,8 @@ export const SelectFetch = ({
                 value={formData[name]}
                 onChange={onChangeHandler}
             >
-                {options.map((option) => (
-                    <option key={option} value={option}>
+                {options.map((option, i) => (
+                    <option key={i + option} value={option}>
                         {option}
                     </option>
                 ))}

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { GenericContext } from '../../contexts/GenericContext';
-import { POST } from '../../logic/JSONPOST';
+import { POST_TOF } from '../../logic/JSONPOST';
 import { GenericProviderValues } from '../../providers/GenericProvider';
 import { FormInputKeys } from '../../types';
 
@@ -32,14 +32,17 @@ export const ButtonPost = ({
     useEffect(() => {
         try {
             if (isClicked) {
-                POST(postUrl, stringifiedData, setResponse);
-                clearErrorIfExists(name);
+                const POST = async () => {
+                    await POST_TOF(postUrl, stringifiedData, setResponse, true);
+                    clearErrorIfExists(name);
+                    setIsClicked(false);
+                };
+                POST();
             }
         } catch (e) {
             let newErrors = { ...errors };
             newErrors[name] = `${e}`;
             setErrors(() => newErrors);
-        } finally {
             setIsClicked(false);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
