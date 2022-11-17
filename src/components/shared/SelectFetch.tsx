@@ -48,7 +48,7 @@ export const SelectFetch = ({
      */
     useEffect(() => {
         try {
-            console.log(`Loading ${name}`);
+            console.log(`SelectFetch loading ${name}`);
             const fetchOptions = async () => {
                 const response: Response = await fetch(fetchUrl);
                 const json = await response.json();
@@ -60,8 +60,14 @@ export const SelectFetch = ({
                 console.log(json);
 
                 let mappedOptions: string[] = [];
-                // If the result json is an Object array, map by given key
+                /**
+                 * If the result json is an Object array, map by given key
+                 */
                 if (mapByKeyName) {
+                    console.log(
+                        `%cMapping by keyName: ${mapByKeyName}`,
+                        'color: red'
+                    );
                     mappedOptions = json.map(
                         (obj: { [key: string]: string }) => {
                             return obj[mapByKeyName];
@@ -77,7 +83,7 @@ export const SelectFetch = ({
                 }
 
                 console.log(
-                    `%cSetting initial value to mappedOptions[0]: ${mappedOptions[0]}`,
+                    `%cSelectFetch setting initial value to mappedOptions[0]: ${mappedOptions[0]}`,
                     'color: purple'
                 );
                 let newFormData = { ...formData };
@@ -98,6 +104,20 @@ export const SelectFetch = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    // Loading
+    if (!options || options.length === 0) {
+        return (
+            <>
+                <label htmlFor={name}>{label}</label>
+                <select name={name} id={name}>
+                    <option key="SelectFetch_loading" value="Loading...">
+                        Loading...
+                    </option>
+                </select>
+            </>
+        );
+    }
 
     return (
         <>

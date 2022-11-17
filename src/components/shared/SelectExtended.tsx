@@ -33,7 +33,10 @@ export const SelectExtended = ({
      */
     useEffect(() => {
         if (options && options.length > 0) {
-            console.log(`%cValue changed to ${options[0]}`, 'color: magenta');
+            console.log(
+                `%cSelectExtended value changed to ${options[0]}`,
+                'color: magenta'
+            );
             let newFormData = { ...formData };
             newFormData[name] = options[0];
             setFormData(newFormData);
@@ -42,14 +45,27 @@ export const SelectExtended = ({
     }, [options]);
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        console.log(`%cValue changed to ${e.target.value}`, 'color: magenta');
+        console.log(
+            `%c SelectExtended value changed to ${e.target.value}`,
+            'color: magenta'
+        );
         let newFormData = { ...formData };
         newFormData[name] = e.target.value;
         setFormData(newFormData);
     };
 
+    // Loading state
     if (!options || options.length === 0) {
-        return <></>;
+        return (
+            <>
+                <label htmlFor={name}>{label}</label>
+                <select name={name} id={name}>
+                    <option key="SelectExtended_loading" value="Loading...">
+                        Loading...
+                    </option>
+                </select>
+            </>
+        );
     }
 
     return (
