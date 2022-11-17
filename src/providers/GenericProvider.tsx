@@ -26,6 +26,7 @@ export const GenericProvider = ({ children }: GenericProviderProps) => {
         autoItemPicker: `${SmartServerRoute}autoItemPicker`,
         singleItem: `${SmartServerRoute}singleItem`,
         itemCluster: `${SmartServerRoute}itemCluster`,
+        templateFileName: `${SmartServerRoute}templateFileName`,
         files: `${SmartServerRoute}files`,
     };
 

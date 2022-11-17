@@ -24,6 +24,7 @@ export type FormInputKeys =
     | 'loadNewsItems'
     | 'editionNamesAndSchemes'
     | 'date'
+    | 'templateFileName'
     | 'outgoingData';
 
 export type OutgoingData = {

@@ -264,6 +264,21 @@ function FormSetNewsItems({
                 </div>
                 <div className={styles.responsiveContainerFlexCol}>
                     <div className={styles.fullWidthResponsiveRow}>
+                        { !formData.editionName ? <></> : 
+                        <div className={styles.fullWidthResponsiveRow}>
+                            <SelectFetch
+                                name="templateFileName"
+                                label="Select Template:"
+                                fetchUrl={`${ROUTES.templateFileName}/${formData.editionName}/NEWS`}
+                                mapByKeyName={null}
+                                formData={formData}
+                                setFormData={setFormData}
+                                isLoadingData={isLoadingData}
+                                setIsLoadingData={setIsLoadingData}
+                            />
+                        </div>
+                        }
+                        
                         <div className={styles.fullWidthResponsiveRow}>
                             <SelectFetch
                                 name="backgroundFilePath"
